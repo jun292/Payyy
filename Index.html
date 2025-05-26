@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JUN-SHOOP PAYMENT</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #87CEEB;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #0a2540;
+    }
+    .tab-menu {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .tab-menu button {
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #e3e9f1;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      min-width: 80px;
+      color: #0a2540;
+      box-shadow: 0 2px 4px rgb(10 37 64 / 0.1);
+    }
+    .tab-menu button.active,
+    .tab-menu button:hover {
+      background: #0a2540;
+      color: white;
+      box-shadow: 0 4px 8px rgb(10 37 64 / 0.3);
+    }
+
+    .tab-content {
+      display: none;
+      max-width: 420px;
+      margin: 0 auto 25px;
+      background: white;
+      padding: 18px 16px;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgb(10 37 64 / 0.07);
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Card styles for wallets, banks */
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      background: #f0f3f7;
+      box-shadow: 0 2px 5px rgb(10 37 64 / 0.05);
+    }
+    .card img {
+      width: 50px;
+      height: auto;
+      object-fit: contain;
+    }
+    .card p {
+      flex-grow: 1;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    .card button {
+      background: #0a2540;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background-color 0.2s ease;
+    }
+    .card button:hover {
+      background: #142f58;
+    }
+
+    /* QRIS Code */
+    .qr-code {
+      text-align: center;
+    }
+    .qr-code img {
+      max-width: 260px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgb(10 37 64 / 0.15);
+    }
+    .qr-code p {
+      margin-top: 10px;
+      font-weight: 700;
+      color: #0a2540;
+    }
+
+    /* Produk vertikal list */
+    .products-list {
+      max-width: 420px;
+      margin: 0 auto 30px;
+      background: white;
+      padding: 20px 15px;
+      border-radius: 10px;
+      box-shadow: 0 6px 12px rgb(10 37 64 / 0.07);
+    }
+    .product-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 15px;
+      padding: 10px 12px;
+      background: #f0f3f7;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgb(10 37 64 / 0.05);
+    }
+    .product-card img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 3px 8px rgb(10 37 64 / 0.1);
+    }
+    .product-card p {
+      flex-grow: 1;
+      font-weight: 700;
+      font-size: 1rem;
+      margin: 0;
+      color: #0a2540;
+    }
+    .product-card a {
+      background: #0a2540;
+      color: white;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+    }
+    .product-card a:hover {
+      background: #142f58;
+    }
+
+    /* Form container */
+    .form-container {
+      max-width: 420px;
+      margin: 0 auto 50px;
+      background: white;
+      padding: 25px 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 14px rgb(10 37 64 / 0.1);
+    }
+    .form-container h3 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0a2540;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #0a2540;
+      font-size: 0.9rem;
+    }
+    input[type="text"],
+    input[type="number"],
+    select,
+    input[type="file"] {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 15px;
+      border: 1.8px solid #c5cbd6;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    input[type="file"]:focus {
+      outline: none;
+      border-color: #0a2540;
+      box-shadow: 0 0 5px rgba(10, 37, 64, 0.3);
+    }
+    #previewImg {
+      width: 100%;
+      max-height: 220px;
+      object-fit: contain;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      display: none;
+      box-shadow: 0 4px 10px rgb(10 37 64 / 0.15);
+    }
+    .submit-btn {
+      background: #0a2540;
+      border: none;
+      width: 100%;
+      padding: 12px 0;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .submit-btn:hover:not(:disabled) {
+      background: #142f58;
+    }
+    .submit-btn:disabled {
+      background: #556677;
+      cursor: not-allowed;
+    }
+
+    /* Toast notification */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0a2540cc;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: none;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgb(10 37 64 / 0.7);
+    }
+
+    @media (max-width: 480px) {
+      .tab-menu {
+        gap: 8px;
+      }
+      .tab-menu button {
+        min-width: 70px;
+        font-size: 0.8rem;
+        padding: 7px 10px;
+      }
+      .product-card img {
+        width: 60px;
+        height: 60px;
+      }
+      .product-card a {
+        padding: 7px 12px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>JUNEK PAYMENT</header>
+
+  <div class="tab-menu">
+    <button class="active" onclick="showTab('ewalletTab', event)">E-WALLET</button>
+    <button onclick="showTab('qrisTab', event)">QRIS</button>
+    <button onclick="showTab('bankTab', event)">BANK TRANSFER</button>
+    <button onclick="showTab('productTab', event)">PRODUK</button>
+  </div>
+
+  <!-- Tab Contents -->
+  <div id="ewalletTab" class="tab-content active">
+  <div class="card">
+      <img src="https://1000logos.net/wp-content/uploads/2021/05/OVO-logo.png" alt="DANA" />
+      <p>083136711869</p>
+      <button onclick="copyToClipboard('083136711869')">Salin</button>
+    </div>
+    <div class="card">
+      <img src="https://1000logos.net/wp-content/uploads/2021/05/OVO-logo.png" alt="OVO" />
+      <p>083136711869</p>
+      <button onclick="copyToClipboard('083136711869')">Salin</button>
+    </div>
+    <div class="card">
+      <img src="https://1000logos.net/wp-content/uploads/2021/06/Gopay-logo.png" alt="GoPay" />
+      <p>083136711869</p>
+      <button onclick="copyToClipboard('083136711869')">Salin</button>
+    </div>
+  </div>
+
+  <div id="qrisTab" class="tab-content">
+    <div class="qr-code">
+      <img src="https://img100.pixhost.to/images/640/539735251_yilzishop.jpg" alt="QRIS Code" />
+      <p>Scan untuk bayar via QRIS</p>
+    </div>
+  </div>
+
+  <div id="bankTab" class="tab-content">
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Bank_Central_Asia_logo.svg/2560px-Bank_Central_Asia_logo.svg.png" alt="BCA" />
+      <p>1234567890 (No. ATM)</p>
+      <button onclick="copyToClipboard('1234567890')">Salin</button>
+    </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Bank_Mandiri_logo.svg/2560px-Bank_Mandiri_logo.svg.png" alt="Mandiri" />
+      <p>0987654321 (No. ATM)</p>
+      <button onclick="copyToClipboard('0987654321')">Salin</button>
+    </div>
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Bank_Negara_Indonesia_logo.svg/2560px-Bank_Negara_Indonesia_logo.svg.png" alt="BNI" />
+      <p>1122334455 (No. ATM)</p>
+      <button onclick="copyToClipboard('1122334455')">Salin</button>
+    </div>
+  </div>
+
+  <div id="productTab" class="tab-content">
+    <div class="products-list">
+      <div class="product-card">
+        <img src="https://cdn.zerohosting.id/product1.png" alt="Hosting Basic" />
+        <p>Hosting Basic</p>
+        <a href="https://zerohosting.id/product/basic" target="_blank" rel="noopener">Beli</a>
+      </div>
+      <div class="product-card">
+        <img src="https://cdn.zerohosting.id/product2.png" alt="Hosting Pro" />
+        <p>Hosting Pro</p>
+        <a href="https://zerohosting.id/product/pro" target="_blank" rel="noopener">Beli</a>
+      </div>
+      <div class="product-card">
+        <img src="https://cdn.zerohosting.id/product3.png" alt="Domain Murah" />
+        <p>Domain Murah</p>
+        <a href="https://zerohosting.id/product/domain" target="_blank" rel="noopener">Beli</a>
+      </div>
+      <div class="product-card">
+        <img src="https://cdn.zerohosting.id/product4.png" alt="SSL Certificate" />
+        <p>SSL Certificate</p>
+        <a href="https://zerohosting.id/product/ssl" target="_blank" rel="noopener">Beli</a>
+      </div>
+      <div class="product-card">
+        <img src="https://cdn.zerohosting.id/product5.png" alt="Email Hosting" />
+        <p>Email Hosting</p>
+        <a href="https://jun.id/product/email" target="_blank" rel="noopener">Beli</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Konfirmasi Pembayaran -->
+  <div class="form-container">
+    <h3>Konfirmasi Pembayaran</h3>
+    <form id="paymentForm" enctype="multipart/form-data">
+      <label for="produk">Nama Produk:</label>
+      <input type="text" id="produk" produk="produk" placeholder="Nama Produk Yang Di Beli" required />
+
+      <label for="method">Metode Pembayaran:</label>
+      <select id="method" name="method" required>
+        <option value="">Pilih metode pembayaran</option>
+        <option value="dana">DANA</option>
+        <option value="ovo">OVO</option>
+        <option value="gopay">GoPay</option>
+        <option value="qris">QRIS</option>
+        <option value="bca">BCA</option>
+        <option value="mandiri">Mandiri</option>
+        <option value="bni">BNI</option>
+      </select>
+
+      <label for="amount">Jumlah Transfer (Rp):</label>
+      <input type="number" id="amount" name="amount" placeholder="Jumlah yang ditransfer" required min="1" />
+
+      <label for="proof">Upload Bukti Transfer:</label>
+      <input type="file" id="proof" name="proof" accept="image/*" required />
+      <img id="previewImg" alt="Preview Bukti Transfer" />
+
+      <button type="submit" class="submit-btn">Kirim Ke WhatsApp</button>
+    </form>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    // Tab switch function
+    function showTab(tabId, event) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-menu button').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      if(event) event.currentTarget.classList.add('active');
+    }
+
+    // Copy nomor ke clipboard
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Nomor berhasil disalin!');
+      }).catch(() => {
+        showToast('Gagal menyalin nomor');
+      });
+    }
+
+    // Toast notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    }
+
+    // Preview image upload
+    const proofInput = document.getElementById('proof');
+    const previewImg = document.getElementById('previewImg');
+    proofInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          previewImg.src = ev.target.result;
+          previewImg.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+      }
+    });
+
+    // Upload ke imgbb
+    async function uploadToImgbb(file) {
+      const apiKey = '45cdd5c086d42a8a160bc4316f961c89'; // Ganti dengan API key Imgbb Anda
+      const formData = new FormData();
+      formData.append('image', file);
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) throw new Error('Gagal upload gambar');
+      const data = await response.json();
+      return data.data.url;
+    }
+
+    // Submit form
+    document.getElementById('paymentForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Mengirim...';
+
+      try {
+        const name = e.target.name.value.trim();
+        const method = e.target.method.value;
+        const amount = e.target.amount.value;
+        const file = e.target.proof.files[0];
+        if (!file) throw new Error('Bukti transfer harus diupload');
+
+        showToast('Uploading bukti transfer...');
+        const imgUrl = await uploadToImgbb(file);
+
+        // Siapkan pesan WhatsApp
+        const phoneNumber = '6283136711869'; // Nomor WhatsApp tujuan (ubah sesuai)
+        const message = `Konfirmasi Pembayaran:\nProduk: ${produk}\nMetode: ${method.toUpperCase()}\nJumlah: Rp${amount}\nBukti transfer: ${imgUrl}`;
+        const waUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+        showToast('Upload sukses! Mengarahkan ke WhatsApp...');
+        // Open WhatsApp link in new tab
+        window.open(waUrl, '_blank');
+
+        // Reset form
+        e.target.reset();
+        previewImg.style.display = 'none';
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Ke WhatsApp';
+      }
+    });
+  </script>
+</body>
+</html>
